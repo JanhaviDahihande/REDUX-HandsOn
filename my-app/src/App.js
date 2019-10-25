@@ -14,17 +14,33 @@ function App() {
             return state;
     }
 }
-const store = createStore( counter );
 
-const render = () => {
-  console.log("Current state: " + store.getState());
+const createStore = (reducer) => {
+  let state;
+  let listeners = [];
+
+  // returns current state
+  const getState = () => state;
+
+  // to change state
+  const dispatch = (action) => {
+    state = reducer(state, action);
+
+    //inform every listener of the chnaged state
+    listeners.forEach(listener => listener());
+  };
+
+  const subscribe = (listener) => {
+    listeners.push(listener);
+
+    //unsubscribe
+    return () => {
+      listeners = listeners.filter(l => l !== listener);
+    }
+  }
+
+  return { getState, dispatch, subscribe };
 }
-store.subscribe(render);
-render();
-
-const dispatchStore = () => {
-  store.dispatch({ type: 'INCREMENT' })
-};
 
 return (
   <div className="App">
