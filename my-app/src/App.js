@@ -16,9 +16,11 @@ function App() {
 }
 const store = createStore( counter );
 
-store.subscribe(() => {
+const render = () => {
   console.log("Current state: " + store.getState());
-});
+}
+store.subscribe(render);
+render();
 
 const dispatchStore = () => {
   store.dispatch({ type: 'INCREMENT' })
